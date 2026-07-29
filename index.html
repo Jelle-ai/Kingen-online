@@ -303,18 +303,28 @@
   .kaart.klein .hoek span{font-size:11px}
   .kaart.klein .pip{font-size:30px}
 
-  .hand{padding:22px calc(50% - 40px) 18px;gap:10px}
+  .hand{padding:52px calc(50% - 40px) 30px;gap:10px}
   /* geen overgang op transform: die vecht met het schuiven en maakt het schokkerig */
   .hand .kaart{transition:none}
   .hand .kaart:hover:not([disabled]){box-shadow:0 8px 18px rgba(46,66,56,.24)}
+  .hand .kaart.gekozen{
+    box-shadow:0 14px 26px rgba(46,66,56,.34);
+    border-color:var(--gold);z-index:300;
+  }
+  .hand .kaart.gekozen::after{
+    content:"speel";position:absolute;left:0;right:0;bottom:-17px;text-align:center;
+    font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);
+  }
 
   /* kaarten die je niet mag leggen: dicht, grijs en niet aan te tikken */
+  /* niet speelbaar: gedempt maar wel herkenbaar rood of zwart */
   .hand .kaart[disabled]{
-    opacity:1;filter:grayscale(1) brightness(.62);
-    background:#CFC9BC;border-color:#B9B2A2;color:#7D7568;
-    box-shadow:none;pointer-events:none;cursor:not-allowed;
+    background:#EDE7DB;border-color:#D6CEBE;
+    box-shadow:none;pointer-events:none;cursor:not-allowed;opacity:1;
   }
-  .hand .kaart[disabled] .pip,.hand .kaart[disabled] .hoek{opacity:.5}
+  .hand .kaart[disabled] .pip,
+  .hand .kaart[disabled] .hoek,
+  .hand .kaart[disabled] .fig{opacity:.42}
 
   /* wie is uitgekomen ---------- */
   .played{position:relative}
@@ -364,6 +374,130 @@
   .vlak .kleur{fill:currentColor}
   .vlak .zacht{fill:rgba(190,148,51,.13)}
   .vlak .mantel{fill:currentColor;fill-opacity:.26}
+
+  /* ================= vensters in iOS-stijl ================= */
+  .waas{
+    position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;
+    background:rgba(28,38,33,.42);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    padding:0;opacity:0;transition:opacity .22s ease;
+  }
+  .waas.aan{opacity:1}
+  .waas[hidden]{display:none}
+  .blad{
+    width:100%;max-width:520px;background:rgba(252,249,243,.97);
+    border-radius:22px 22px 0 0;padding:10px 18px calc(20px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 40px rgba(28,38,33,.28);
+    transform:translateY(14px);transition:transform .24s cubic-bezier(.32,.72,0,1);
+    max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  .waas.aan .blad{transform:translateY(0)}
+  .greep{width:38px;height:5px;border-radius:999px;background:#D8D0C0;margin:0 auto 14px}
+  .blad h3{
+    font-family:var(--display);font-weight:800;font-size:26px;text-transform:uppercase;
+    letter-spacing:.02em;margin:0 0 2px;text-align:center;
+  }
+  .blad .onder{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-soft);text-align:center;margin:0 0 16px;
+  }
+  .blad .uitleg{font-size:14px;color:var(--ink-soft);text-align:center;margin:0 0 16px;line-height:1.45}
+  .bladknoppen{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+  .bladknoppen button{
+    width:100%;padding:15px 18px;border-radius:15px;font-size:17px;font-weight:600;
+    border:1px solid var(--line);background:var(--card-2);color:var(--ink);
+  }
+  .bladknoppen button:not(.kaart):hover{background:var(--line-soft);color:var(--ink)}
+  .bladknoppen .hoofd{
+    background:var(--felt);border-color:var(--felt);color:var(--card);
+    font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:.05em;text-transform:uppercase;
+  }
+  .bladknoppen .hoofd:not(.kaart):hover{background:var(--gold);border-color:var(--gold);color:var(--felt-deep)}
+  .bladknoppen .stil{background:transparent;border-color:transparent;color:var(--ink-soft);font-size:16px}
+
+  /* rijen zoals in iOS-instellingen */
+  .lijst{background:var(--card-2);border-radius:15px;overflow:hidden;margin:0 0 14px}
+  .lijst .rij{
+    display:flex;align-items:center;gap:12px;padding:13px 15px;
+    border-bottom:1px solid rgba(0,0,0,.06);font-size:16px;
+  }
+  .lijst .rij:last-child{border-bottom:0}
+  .lijst .rij .naam{flex:1;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lijst .rij .rondepunt{font-family:var(--mono);font-size:15px;width:4.5ch;text-align:right}
+  .lijst .rij .rondepunt.min{color:var(--good)}
+  .lijst .rij .totpunt{font-family:var(--mono);font-size:18px;font-weight:700;width:5ch;text-align:right}
+  .lijst .rij.leider .totpunt{color:var(--gold)}
+  .lijst .rij .merk{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+
+  .slagvak{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:0 0 16px}
+  .slagvak .played .who{max-width:8ch}
+  .volgende{
+    background:var(--gold-tint);border-radius:15px;padding:13px 15px;margin:0 0 4px;text-align:center;
+  }
+  .volgende .wat{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+  .volgende .naam{font-family:var(--display);font-weight:800;font-size:21px;text-transform:uppercase;letter-spacing:.02em;margin-top:2px}
+  .volgende .wie{font-size:13.5px;color:var(--ink-soft);margin-top:3px}
+
+  .waarschuw{
+    background:#F6E6E4;border-radius:14px;padding:11px 14px;margin:0 0 12px;
+    font-size:14px;color:#8E322C;text-align:center;font-weight:600;
+  }
+  .waarschuw b{font-family:var(--display);font-size:17px;text-transform:uppercase;letter-spacing:.02em}
+
+  /* hostknop */
+  .hostknop{
+    position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:70;
+    width:46px;height:46px;border-radius:999px;background:rgba(252,249,243,.94);
+    border:1px solid var(--line);box-shadow:0 4px 14px rgba(28,38,33,.22);
+    font-size:19px;padding:0;line-height:1;
+  }
+  .hostknop:not(.kaart):hover{background:var(--card);color:var(--ink)}
+
+  .puntrij{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line-soft)}
+  .puntrij .naam{flex:1;font-weight:600}
+  .puntrij input{width:74px;text-align:center;font-family:var(--mono);padding:9px 6px;border-radius:11px}
+  select{
+    font-family:var(--body);font-size:16px;padding:11px 14px;border-radius:13px;
+    border:1px solid var(--line);background:var(--card-2);color:var(--ink);width:100%;
+  }
+
+  /* ---------- instellingen ---------- */
+  .keuzerij{display:flex;gap:7px;margin:0 0 14px}
+  .keuzerij button{
+    flex:1;padding:11px 6px;border-radius:13px;border:1px solid var(--line);
+    background:var(--card-2);color:var(--ink);font-size:14px;font-weight:600;
+  }
+  .keuzerij button[aria-pressed=true]{
+    background:var(--felt);border-color:var(--felt);color:var(--card);
+  }
+  .keuzerij button:not(.kaart):hover{background:var(--line-soft);color:var(--ink)}
+  .keuzerij button[aria-pressed=true]:not(.kaart):hover{background:var(--felt);color:var(--card)}
+  .kopje{
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-soft);margin:0 0 7px;
+  }
+  .kleurbol{display:flex;gap:10px;justify-content:center;margin:0 0 14px}
+  .kleurbol button{
+    width:44px;height:44px;border-radius:999px;border:2px solid transparent;padding:0;
+  }
+  .kleurbol button[aria-pressed=true]{border-color:var(--ink)}
+
+  html[data-thema="nacht"]{
+    --felt:#2E3B45; --felt-deep:#1E2830; --gold:#C0973A; --gold-pale:#E4D2A2;
+    --gold-tint:rgba(200,160,70,.28); --good:#5C9678;
+  }
+  html[data-thema="zee"]{
+    --felt:#3C6478; --felt-deep:#274A5C; --gold:#B8862E; --gold-pale:#E6D3A6;
+    --gold-tint:rgba(200,165,80,.28);
+  }
+  html[data-thema="wijn"]{
+    --felt:#6B3A44; --felt-deep:#4C262F; --gold:#B08829; --gold-pale:#EBD9B0;
+    --gold-tint:rgba(214,184,118,.30);
+  }
+  html[data-kaart="groot"] .kaart{width:92px;height:129px}
+  html[data-kaart="groot"] .hand{
+    padding-left:calc(50% - 46px);padding-right:calc(50% - 46px);
+    padding-top:60px;padding-bottom:32px;
+  }
 </style>
 </head>
 <body>
@@ -387,9 +521,11 @@
       <input id="nameIn" type="text" placeholder="Jouw naam" autocomplete="nickname" maxlength="14" aria-label="Jouw naam">
       <button id="btnHost" class="btn-primary btn-block" type="button">Kamer maken</button>
       <button id="btnJoinScr" class="btn-block" type="button">Deelnemen met code</button>
+      <button id="btnSolo" class="btn-block" type="button">Alleen testen met drie computers</button>
     </div>
     <p class="err" id="homeErr"></p>
-    <button id="btnTest" class="btn-quiet btn-block" type="button" style="margin-top:4px">Verbinding testen</button>
+    <button id="btnInstel" class="btn-quiet btn-block" type="button" style="margin-top:4px">Instellingen</button>
+    <button id="btnTest" class="btn-quiet btn-block" type="button">Verbinding testen</button>
     <button id="btnRelais" class="btn-quiet btn-block" type="button">Relais instellen</button>
     <div id="relaisVak" hidden style="margin-top:8px">
       <p class="hint" style="margin-bottom:8px">
@@ -441,6 +577,7 @@
     <div class="card">
       <p class="status" id="status"></p>
       <p class="wacht" id="wacht" hidden></p>
+      <p class="waarschuw" id="slagWaarschuw" hidden></p>
       <div class="spelers" id="spelers"></div>
       <div class="table" id="tableArea"></div>
       <div id="choice" hidden>
@@ -464,16 +601,6 @@
     </div>
   </section>
 
-  <!-- 4b. TUSSENSTAND -->
-  <section id="scrTussen" class="card" hidden>
-    <p class="rondekop" id="tussenKop"></p>
-    <h2 id="tussenTitel">Tussenstand</h2>
-    <p class="hint" id="tussenReden"></p>
-    <ul class="uitslag" id="tussenLijst"></ul>
-    <p class="wachtlijst" id="tussenWacht"></p>
-    <button id="btnVerder" class="btn-primary btn-block" type="button">Verder</button>
-  </section>
-
   <!-- 5. EINDE -->
   <section id="scrEnd" class="card" hidden>
     <div class="champ">
@@ -485,6 +612,10 @@
     <button id="btnAgain" class="btn-primary btn-block" type="button" hidden>Nog een spel</button>
     <button id="btnLeave" class="btn-quiet btn-block" type="button" style="margin-top:8px">Verlaten</button>
   </section>
+</div>
+<button id="btnHostmenu" class="hostknop" type="button" hidden aria-label="Hostmenu">&#9881;</button>
+<div class="waas" id="venster" hidden>
+  <div class="blad" id="vensterBlad" role="dialog" aria-modal="true"></div>
 </div>
 <canvas id="fx" aria-hidden="true"></canvas>
 
@@ -548,12 +679,49 @@
     return list;
   }
 
-  // Kleur bekennen als het kan; anders vrij.
-  function legal(hand, trick){
-    if (!trick.length) return hand.slice();
+  // Kleur bekennen als het kan. Kun je niet volgen, dan MOET je de strafkaart
+  // van deze ronde kwijt als je er een hebt. En in de hartenheer-ronde mag je
+  // geen harten uitkomen, tenzij je niets anders meer hebt.
+  function strafKaarten(round, hand){
+    if (!round) return [];
+    if (round.key === "queens") return hand.filter(function(c){ return c.r === 12; });
+    if (round.key === "jk")     return hand.filter(function(c){ return c.r === 11 || c.r === 13; });
+    if (round.key === "kh")     return hand.filter(function(c){ return c.r === 13 && c.s === "\u2665"; });
+    if (round.key === "hearts") return hand.filter(function(c){ return c.s === "\u2665"; });
+    return [];
+  }
+  function legal(hand, trick, round){
+    if (!trick.length){
+      if (round && round.key === "kh"){
+        var zonderHarten = hand.filter(function(c){ return c.s !== "\u2665"; });
+        if (zonderHarten.length) return zonderHarten;      // geen harten uitkomen
+      }
+      return hand.slice();
+    }
     var lead = trick[0].card.s;
     var follow = hand.filter(function(c){ return c.s === lead; });
-    return follow.length ? follow : hand.slice();
+    if (follow.length) return follow;
+    var straf = strafKaarten(round, hand);
+    if (straf.length) return straf;                        // verplicht afgooien
+    return hand.slice();
+  }
+  // Waarom mag je niets anders? Voor de uitleg op het scherm.
+  function legalReden(hand, trick, round){
+    if (!trick.length){
+      if (round && round.key === "kh" && hand.some(function(c){ return c.s !== "\u2665"; })
+          && hand.some(function(c){ return c.s === "\u2665"; }))
+        return "je mag geen harten uitkomen";
+      return "";
+    }
+    var lead = trick[0].card.s;
+    if (hand.some(function(c){ return c.s === lead; })) return "je moet " + lead + " volgen";
+    var straf = strafKaarten(round, hand);
+    if (!straf.length) return "";
+    if (round.key === "queens") return "je kunt niet volgen, dus je moet een vrouw leggen";
+    if (round.key === "jk")     return "je kunt niet volgen, dus je moet een boer of heer leggen";
+    if (round.key === "kh")     return "je kunt niet volgen, dus je moet de hartenheer leggen";
+    if (round.key === "hearts") return "je kunt niet volgen, dus je moet een hart leggen";
+    return "";
   }
 
   function trickWinner(trick, troef){
@@ -670,8 +838,20 @@
 
     function toegelaten(i){
       var h = hand[i];
-      var kies = slag.length ? h.filter(function(c){ return c.s === slag[0].card.s; }) : null;
-      if (!kies || !kies.length) kies = h;
+      var kies;
+      if (!slag.length){
+        kies = h;
+        if (round.key === "kh"){
+          var zh = h.filter(function(c){ return c.s !== "\u2665"; });
+          if (zh.length) kies = zh;
+        }
+      } else {
+        kies = h.filter(function(c){ return c.s === slag[0].card.s; });
+        if (!kies.length){
+          var straf = strafKaarten(round, h);
+          kies = straf.length ? straf : h;
+        }
+      }
       // gelijkwaardige kaarten maar één keer proberen: zelfde kleur, naast
       // elkaar in wat er nog rondgaat, en evenveel waard in deze ronde
       var overig = [];
@@ -752,7 +932,7 @@
     roundDecided:roundDecided, decidedReason:decidedReason,
     uniekeUitkomst:uniekeUitkomst, kaartWaarde:kaartWaarde,
     deck:deck, deal:deal, shuffle:shuffle, rounds:rounds,
-    legal:legal, trickWinner:trickWinner, scoreRound:scoreRound, roundTotal:roundTotal,
+    legal:legal, legalReden:legalReden, strafKaarten:strafKaarten, trickWinner:trickWinner, scoreRound:scoreRound, roundTotal:roundTotal,
     tricksPerRound:tricksPerRound, queenValue:queenValue, khValue:khValue, specialTrick:specialTrick
   };
   root.KingenEngine = Engine;
@@ -879,7 +1059,7 @@
 
   /* ---------- schermbeheer ---------- */
   function show(id){
-    ["scrHome","scrJoin","scrLobby","scrGame","scrTussen","scrEnd"].forEach(function(s){ $(s).hidden = (s !== id); });
+    ["scrHome","scrJoin","scrLobby","scrGame","scrEnd"].forEach(function(s){ $(s).hidden = (s !== id); });
   }
   var toastT = null;
   function toast(txt){
@@ -1014,7 +1194,8 @@
       spelId: Date.now().toString(36),
       spelers: zit, ids: ids, rondes: E.rounds(ids), rondeIdx: 0,
       fase: "troefkeuze", troef: null, handen: {}, slag: [], aanZet: null,
-      winnaars: [], gepakt: {}, vorigeSlag: null, scores: {}, klaar: {}, vroeg: null
+      winnaars: [], gepakt: {}, vorigeSlag: null, scores: {}, klaar: {}, vroeg: null,
+      geschiedenis: []
     };
   }
 
@@ -1039,14 +1220,39 @@
     zendAlles();
   }
 
+  function bewaarStap(){
+    if (!G) return;
+    try {
+      G.geschiedenis.push(JSON.stringify({
+        handen:G.handen, slag:G.slag, aanZet:G.aanZet, winnaars:G.winnaars,
+        gepakt:G.gepakt, vorigeSlag:G.vorigeSlag, fase:G.fase, troef:G.troef,
+        scores:G.scores, rondeIdx:G.rondeIdx
+      }));
+      if (G.geschiedenis.length > 12) G.geschiedenis.shift();
+    } catch(e){}
+  }
+  function neemTerug(){
+    if (!G || !G.geschiedenis.length) return false;
+    var vorig = JSON.parse(G.geschiedenis.pop());
+    G.handen = vorig.handen; G.slag = vorig.slag; G.aanZet = vorig.aanZet;
+    G.winnaars = vorig.winnaars; G.gepakt = vorig.gepakt; G.vorigeSlag = vorig.vorigeSlag;
+    G.fase = vorig.fase; G.troef = vorig.troef; G.scores = vorig.scores; G.rondeIdx = vorig.rondeIdx;
+    if (slagTimer){ clearTimeout(slagTimer); slagTimer = null; }
+    zendAlles(true);
+    return true;
+  }
+
+  var slagTimer = null;
+  var TEMPO = { slag:2000, bot:650 };     // hoe lang een slag blijft staan
   function speelKaart(pid, key){
     if (!G || G.fase !== "spelen" || pid !== G.aanZet) return;
     var hand = G.handen[pid] || [], idx = -1;
     hand.forEach(function(c,i){ if (E.cardKey(c) === key) idx = i; });
     if (idx < 0) return;                                        // kaart niet in de hand
-    var toegelaten = E.legal(hand, G.slag).map(E.cardKey);
+    var toegelaten = E.legal(hand, G.slag, G.rondes[G.rondeIdx]).map(E.cardKey);
     if (toegelaten.indexOf(key) < 0) return;                    // kleur niet bekend: geweigerd
 
+    bewaarStap();
     var kaart = hand.splice(idx,1)[0];
     G.slag.push({ pid:pid, card:kaart });
 
@@ -1063,17 +1269,34 @@
     G.vorigeSlag = { kaarten:G.slag.slice(), winnaar:w, nr:G.winnaars.length };
     G.slag = []; G.aanZet = w;
 
+    // De slag blijft twee tellen in beeld voor iedereen.
+    G.fase = "slagklaar";
+    zendAlles();
+    if (slagTimer) clearTimeout(slagTimer);
+    slagTimer = setTimeout(function(){
+      slagTimer = null;
+      if (!G || G.fase !== "slagklaar") return;
+      G.fase = "spelen";
+      rondeAfronden();
+    }, TEMPO.slag);
+    return;
+  }
+
+  function rondeAfronden(){
+
     var rd = G.rondes[G.rondeIdx];
     var over = G.handen[G.ids[0]].length;
     var uitslag = null, reden = null;
+    // Bij de laatste slag niets meer afkappen: die wordt gewoon uitgespeeld.
+    var magVroeg = over >= 2;
 
     if (over === 0){
       uitslag = E.scoreRound(rd, G.ids, G.gepakt, G.winnaars);
-    } else if (E.roundDecided(rd, G.gepakt, G.ids)){
+    } else if (magVroeg && E.roundDecided(rd, G.gepakt, G.ids)){
       // snelle controle: alle strafkaarten zijn binnen
       uitslag = E.scoreRound(rd, G.ids, G.gepakt, G.winnaars);
       reden = E.decidedReason(rd);
-    } else if (over <= 7){
+    } else if (magVroeg && over <= 7){
       // trager maar volledig: elk mogelijk vervolg doorrekenen
       uitslag = E.uniekeUitkomst({
         round:rd, ids:G.ids, handen:G.handen, troef:G.troef, slag:G.slag,
@@ -1088,6 +1311,7 @@
       G.scores[rd.key] = uitslag;
       G.fase = (G.rondeIdx >= G.rondes.length - 1) ? "gedaan" : "rondeklaar";
       G.klaar = {};
+      G.geschiedenis = [];
     }
     zendAlles(klaar);
   }
@@ -1102,6 +1326,28 @@
     else zendAlles();
   }
 
+  function pasPuntenAan(rondeKey, nieuwe){
+    if (!G || !G.scores[rondeKey]) return;
+    G.ids.forEach(function(id){
+      var v = parseInt(nieuwe[id], 10);
+      if (!isNaN(v)) G.scores[rondeKey][id] = v;
+    });
+    zendAlles(true);
+  }
+  function pasTotalenAan(nieuwe){
+    if (!G) return;
+    if (!G.scores["correctie"]){
+      G.scores["correctie"] = {};
+      G.ids.forEach(function(id){ G.scores["correctie"][id] = 0; });
+    }
+    var nu = totalen();
+    G.ids.forEach(function(id){
+      var w = parseInt(nieuwe[id], 10);
+      if (isNaN(w)) return;
+      G.scores["correctie"][id] += (w - nu[id]);
+    });
+    zendAlles(true);
+  }
   function totalen(){
     var t = {};
     G.ids.forEach(function(id){ t[id] = 0; });
@@ -1125,13 +1371,18 @@
       }),
       rondeIdx:G.rondeIdx, troef:G.troef, slag:G.slag, aanZet:G.aanZet, hand:hand,
       toegelaten: (G.fase === "spelen" && G.aanZet === pid)
-        ? E.legal(G.handen[pid] || [], G.slag).map(E.cardKey) : [],
+        ? E.legal(G.handen[pid] || [], G.slag, G.rondes[G.rondeIdx]).map(E.cardKey) : [],
+      reden: (G.fase === "spelen" && G.aanZet === pid)
+        ? E.legalReden(G.handen[pid] || [], G.slag, G.rondes[G.rondeIdx]) : "",
       kaartenOver: G.ids.reduce(function(o,id){ o[id] = (G.handen[id]||[]).length; return o; }, {}),
       vorigeSlag:G.vorigeSlag, scores:G.scores, totalen:totalen(),
       lopend: E.scoreRound(G.rondes[G.rondeIdx], G.ids, G.gepakt, G.winnaars),
       klaarLijst: G.klaar || {}, vroeg: G.vroeg || null,
       slagNr: G.winnaars.length + 1,
-      slagenTotaal: E.tricksPerRound(G.ids.length)
+      slagenTotaal: E.tricksPerRound(G.ids.length),
+      bijzondereSlag: E.specialTrick(G.ids.length),
+      kanTerug: (G.geschiedenis.length > 0),
+      isHost: (pid === me.pid && me.isHost)
     };
   }
 
@@ -1146,6 +1397,57 @@
       }
     });
     bewaarSpel(meteenBewaren);
+    botsSpelen();
+  }
+
+  /* ---------- alleen testen: drie computers aan tafel ---------- */
+  var soloModus = false, botTimer = null;
+  function startSolo(){
+    var naam = ($("nameIn").value || "").trim() || "Jij";
+    laatLos();
+    soloModus = true;
+    me.naam = naam.slice(0,14); me.isHost = true; me.pid = "host"; me.code = "TEST";
+    wisSessie();
+    lobby = [{ id:"host", naam:me.naam, online:true, tid:MIJN_TOESTEL }];
+    ["Bot An","Bot Tom","Bot Lies"].forEach(function(n, i){
+      lobby.push({ id:"bot"+i, naam:n, online:true, tid:"bot"+i, bot:true });
+    });
+    G = newGame(lobby);
+    G.spelers.forEach(function(pl){ pl.bot = (pl.id.indexOf("bot") === 0); });
+    inSpel = true;
+    // Vaste polsslag: zo blijft het nooit hangen als een geplande zet vervalt.
+    if (!window.__botPols) window.__botPols = setInterval(botsSpelen, 400);
+    startRonde();
+  }
+  function isBot(id){
+    if (!G) return false;
+    var b = false;
+    G.spelers.forEach(function(pl){ if (pl.id === id && pl.bot) b = true; });
+    return b;
+  }
+  function botsSpelen(){
+    if (!soloModus || !G) return;
+    if (botTimer) return;
+    var r = G.rondes[G.rondeIdx];
+    var doen = null;
+    if (G.fase === "troefkeuze" && isBot(r.start)){
+      doen = function(){
+        var h = G.handen[r.start] || [];
+        var kl = h.length ? h[Math.floor(Math.random()*h.length)].s : E.SUITS[0];
+        kiesTroef(r.start, kl);
+      };
+    } else if (G.fase === "spelen" && isBot(G.aanZet)){
+      doen = function(){
+        var pid = G.aanZet;
+        var mag = E.legal(G.handen[pid] || [], G.slag, G.rondes[G.rondeIdx]);
+        if (mag.length) speelKaart(pid, E.cardKey(mag[Math.floor(Math.random()*mag.length)]));
+      };
+    } else if (G.fase === "rondeklaar"){
+      var wacht = G.spelers.filter(function(pl){ return pl.bot && !G.klaar[pl.id]; });
+      if (wacht.length) doen = function(){ meldKlaar(wacht[0].id); };
+    }
+    if (!doen) return;
+    botTimer = setTimeout(function(){ botTimer = null; doen(); }, TEMPO.bot);
   }
 
   /* ---------- lobby ---------- */
@@ -1356,6 +1658,7 @@
     if (d.t === "speel") speelKaart(pid, d.kaart);
     if (d.t === "troef") kiesTroef(pid, d.suit);
     if (d.t === "verder") meldKlaar(pid);
+    if (d.t === "terug" && pid === "host") neemTerug();
   }
 
   function joinKamer(code, naam, herstel){
@@ -1499,6 +1802,9 @@
       if (msg.t === "speel") speelKaart(me.pid, msg.kaart);
       if (msg.t === "troef") kiesTroef(me.pid, msg.suit);
       if (msg.t === "verder") meldKlaar(me.pid);
+      if (msg.t === "terug") neemTerug();
+      if (msg.t === "punten") pasPuntenAan(msg.ronde, msg.waarden);
+      if (msg.t === "totalen") pasTotalenAan(msg.waarden);
     } else if (hostConn && hostConn.open){
       try { hostConn.send(msg); } catch(e){}
     }
@@ -1542,6 +1848,17 @@
 
   var RANG = {11:"B",12:"V",13:"H",14:"A"};
   var handSleutel = "", nieuweHand = false, vorigBord = "";
+  var gekozenKaart = null;
+  function toonKeuze(){
+    var h = $("hand"), v = view;
+    if (!v) return;
+    Array.prototype.forEach.call(h.children, function(el, i){
+      var c = v.hand[i];
+      el.classList.toggle("gekozen", !!c && E.cardKey(c) === gekozenKaart && !el.disabled);
+    });
+    planSchaal();
+  }
+  function wisKeuze(){ gekozenKaart = null; toonKeuze(); }
 
   // Getekende figuren in plaats van letters: een helm met veer voor de boer,
   // een kroon met parels voor de vrouw, een kroon met kruis voor de heer.
@@ -1699,14 +2016,22 @@
     var h2 = document.createElement("span"); h2.className = "hoek om"; h2.textContent = rang;
     var k2 = document.createElement("span"); k2.textContent = c.s; h2.appendChild(k2);
     if (opts.groot) b.append(h1, midden);
-    else b.append(h1, midden, h2);
+    else b.append(h1, midden);          // geen tweede, omgekeerde hoek
     if (opts.klikbaar){
       b.type = "button";
       var naam = ({11:"boer",12:"vrouw",13:"heer",14:"aas"})[c.r] || rang;
       b.setAttribute("aria-label", naam + " " + c.s + (opts.uit ? " (mag nu niet)" : ""));
       if (opts.uit) b.disabled = true;
       else b.addEventListener("click", function(){
-        speelKaartNu(E.cardKey(c));
+        var sleutel = E.cardKey(c);
+        if (gekozenKaart === sleutel){ speelKaartNu(sleutel); return; }
+        gekozenKaart = sleutel;
+        toonKeuze();
+        var h = $("hand");
+        var doel = b.offsetLeft + b.offsetWidth/2 - h.clientWidth/2;
+        if (h.scrollTo) h.scrollTo({ left:doel, behavior:"smooth" });
+        else h.scrollLeft = doel;
+        planSchaal();
       });
     }
     return b;
@@ -1768,8 +2093,10 @@
     Array.prototype.forEach.call(h.children, function(el){
       var c = el.offsetLeft + el.offsetWidth/2;
       var d = Math.min(1, Math.abs(c - mid) / (h.clientWidth/2 || 1));
-      var sc = 1.16 - d*0.34;
-      el.style.transform = "scale(" + sc.toFixed(3) + ") translateY(" + (-(1-d)*9).toFixed(1) + "px)";
+      var uitgekozen = el.classList.contains("gekozen");
+      var sc = (uitgekozen ? 1.26 : 1.16) - d*0.34;
+      var omhoog = uitgekozen ? -15 : -(1-d)*9;
+      el.style.transform = "scale(" + sc.toFixed(3) + ") translateY(" + omhoog.toFixed(1) + "px)";
       el.style.zIndex = String(200 - Math.round(d*100));
       el.style.opacity = (1 - d*0.25).toFixed(2);
     });
@@ -1784,6 +2111,217 @@
   window.addEventListener("resize", planSchaal);
 
   var rondeCache = { spelId:null, rondes:null };
+
+  /* =======================================================================
+     VENSTERS \u2014 alles wat vroeger een apart scherm was, komt nu bovenop
+     het spel te liggen, zoals een blad dat van onder omhoog schuift.
+     ======================================================================= */
+  var vensterNu = null;
+  function sluitVenster(){
+    var w = $("venster");
+    w.classList.remove("aan");
+    setTimeout(function(){ if (!w.classList.contains("aan")) w.hidden = true; }, 200);
+    vensterNu = null;
+  }
+  function toonVenster(o){
+    var w = $("venster"), blad = $("vensterBlad");
+    vensterNu = o.soort || "los";
+    blad.innerHTML = "";
+    var greep = document.createElement("div"); greep.className = "greep"; blad.appendChild(greep);
+    if (o.onder){ var u = document.createElement("p"); u.className = "onder"; u.textContent = o.onder; blad.appendChild(u); }
+    if (o.titel){ var h = document.createElement("h3"); h.textContent = o.titel; blad.appendChild(h); }
+    if (o.uitleg){ var e = document.createElement("p"); e.className = "uitleg"; e.textContent = o.uitleg; blad.appendChild(e); }
+    (o.delen || []).forEach(function(d){ if (d) blad.appendChild(d); });
+    if (o.knoppen && o.knoppen.length){
+      var vak = document.createElement("div"); vak.className = "bladknoppen";
+      o.knoppen.forEach(function(k){
+        var b = document.createElement("button");
+        b.type = "button"; b.textContent = k.tekst;
+        b.className = k.soort === "hoofd" ? "hoofd" : (k.soort === "stil" ? "stil" : "");
+        if (k.uit) b.disabled = true;
+        b.addEventListener("click", function(){ if (k.actie) k.actie(); });
+        vak.appendChild(b);
+      });
+      blad.appendChild(vak);
+    }
+    w.hidden = false;
+    requestAnimationFrame(function(){ w.classList.add("aan"); });
+    blad.scrollTop = 0;
+  }
+  function rijenLijst(rijen){
+    var l = document.createElement("div"); l.className = "lijst";
+    rijen.forEach(function(r){ l.appendChild(r); });
+    return l;
+  }
+  function spelerRij(v, id, rondePunt, totaal, leider){
+    var r = document.createElement("div");
+    r.className = "rij" + (leider ? " leider" : "");
+    var n = document.createElement("span"); n.className = "naam";
+    n.textContent = naamVan(v, id) + (id === v.jij ? " (jij)" : "");
+    r.appendChild(n);
+    if (rondePunt !== null && rondePunt !== undefined){
+      var rp = document.createElement("span");
+      rp.className = "rondepunt" + (rondePunt < 0 ? " min" : "");
+      rp.textContent = (rondePunt > 0 ? "+" : "") + rondePunt;
+      r.appendChild(rp);
+    }
+    var tp = document.createElement("span"); tp.className = "totpunt"; tp.textContent = totaal;
+    r.appendChild(tp);
+    return r;
+  }
+  function slagVak(v, slag, winnaar){
+    var vak = document.createElement("div"); vak.className = "slagvak";
+    slag.forEach(function(e, i){
+      var d = document.createElement("div");
+      d.className = "played" + (winnaar === e.pid ? " win" : "") + (i === 0 ? " uit" : "");
+      if (i === 0){
+        var u = document.createElement("span"); u.className = "uitteken"; u.textContent = "\u25bc uit";
+        d.appendChild(u);
+      }
+      var who = document.createElement("span"); who.className = "who";
+      who.textContent = (winnaar === e.pid ? "\u265b " : "") + naamVan(v, e.pid);
+      d.appendChild(who);
+      d.appendChild(kaartEl(e.card, { troef: v.troef && e.card.s === v.troef, klein:true }));
+      vak.appendChild(d);
+    });
+    return vak;
+  }
+  function rondeNaam(v, r){
+    return r.troefRonde ? ("Troef \u00b7 " + naamVan(v, r.eigenaar)) : r.naam;
+  }
+
+
+  // Welk venster hoort bij deze stand? Verandert de sleutel niet, dan laten we
+  // staan wat er staat \u2014 zo blijft het hostmenu open terwijl je bezig bent.
+  var vensterSleutel = "";
+  function fasevenster(v){
+    var r = v.rondes[v.rondeIdx];
+    var sleutel;
+    if (v.fase === "troefkeuze") sleutel = "troef|" + v.rondeIdx + "|" + (r.start === v.jij);
+    else if (v.fase === "slagklaar") sleutel = "slag|" + v.rondeIdx + "|" + (v.vorigeSlag ? v.vorigeSlag.nr : 0);
+    else if (v.fase === "rondeklaar") sleutel = "ronde|" + v.rondeIdx;
+    else if (v.fase === "spelen" && !v.slag.length
+             && v.rondes[v.rondeIdx].key === "last"
+             && (v.slagNr === v.bijzondereSlag || v.slagNr === v.slagenTotaal))
+      sleutel = "waarschuw|" + v.rondeIdx + "|" + v.slagNr;
+    else sleutel = "geen|" + v.rondeIdx + "|" + v.slagNr;
+
+    if (sleutel === vensterSleutel){
+      if (v.fase === "rondeklaar" && vensterNu === "fase") vernieuwRondeVenster(v);
+      return;
+    }
+    vensterSleutel = sleutel;
+
+    if (v.fase === "troefkeuze"){
+      if (r.start !== v.jij){ sluitVenster(); return; }
+      var vak = document.createElement("div");
+      vak.className = "suitpick"; vak.style.marginBottom = "4px";
+      E.SUITS.forEach(function(kl){
+        var b2 = document.createElement("button");
+        b2.type = "button"; b2.textContent = kl;
+        if (E.ROOD[kl]) b2.className = "rood";
+        b2.setAttribute("aria-label", "Troef " + kl);
+        b2.addEventListener("click", function(){ sluitVenster(); stuurHost({ t:"troef", suit:kl }); });
+        vak.appendChild(b2);
+      });
+      toonVenster({
+        soort:"fase",
+        onder:"Ronde " + (v.rondeIdx+1) + " van " + v.rondes.length,
+        titel:"Jij komt uit",
+        uitleg:"Kies de troefkleur voor deze ronde. Elke slag die je pakt telt \u22121 punt.",
+        delen:[vak]
+      });
+      return;
+    }
+
+    if (v.fase === "slagklaar" && v.vorigeSlag){
+      var w = v.vorigeSlag.winnaar;
+      var extra = null;
+      if (r.key === "last"){
+        if (v.vorigeSlag.nr === v.bijzondereSlag || v.vorigeSlag.nr === v.slagenTotaal){
+          extra = document.createElement("p");
+          extra.className = "waarschuw";
+          extra.innerHTML = naamVan(v, w) + " pakt de " + v.vorigeSlag.nr + "de slag \u2014 <b>"
+            + (v.vorigeSlag.nr === v.slagenTotaal ? "3" : "2") + " punten</b>";
+        }
+      }
+      toonVenster({
+        soort:"fase",
+        onder:"Slag " + v.vorigeSlag.nr + " van " + v.slagenTotaal,
+        titel:(w === v.jij ? "Jij pakt hem" : naamVan(v, w) + " pakt hem"),
+        delen:[slagVak(v, v.vorigeSlag.kaarten, w), extra]
+      });
+      return;
+    }
+
+    if (v.fase === "rondeklaar"){ toonRondeVenster(v); return; }
+
+    if (sleutel.indexOf("waarschuw|") === 0){
+      var laatste = (v.slagNr === v.slagenTotaal);
+      toonVenster({
+        soort:"fase",
+        onder:"Ronde " + (v.rondeIdx+1) + " \u00b7 " + rondeNaam(v, v.rondes[v.rondeIdx]),
+        titel:laatste ? "Laatste slag" : "Slag " + v.slagNr,
+        uitleg:"Deze slag mag je niet pakken. Wie hem binnenhaalt krijgt "
+          + (laatste ? "3" : "2") + " strafpunten.",
+        knoppen:[{ tekst:"Begrepen", soort:"hoofd", actie:sluitVenster }]
+      });
+      setTimeout(function(){ if (vensterNu === "fase" && vensterSleutel === sleutel) sluitVenster(); }, 4000);
+      return;
+    }
+
+    sluitVenster();
+  }
+
+  function rondeDelen(v){
+    var r = v.rondes[v.rondeIdx];
+    var pts = v.scores[r.key] || {};
+    var delen = [];
+    if (v.vroeg){
+      var wieMeest = null, meest = -Infinity;
+      v.ids.forEach(function(id){ if ((pts[id]||0) > meest){ meest = pts[id]||0; wieMeest = id; } });
+      var u = document.createElement("p"); u.className = "waarschuw";
+      u.innerHTML = "De ronde stopte vroeger: " + v.vroeg + ".<br>"
+        + (meest > 0 ? ("<b>" + naamVan(v, wieMeest) + "</b> krijgt " + meest + " punten.")
+                     : "Niemand kreeg strafpunten.");
+      delen.push(u);
+    }
+    var beste = Math.min.apply(null, v.ids.map(function(id){ return v.totalen[id]; }));
+    var rijen = v.ids.slice().sort(function(a2,b2){ return v.totalen[a2] - v.totalen[b2]; })
+      .map(function(id){ return spelerRij(v, id, pts[id] || 0, v.totalen[id], v.totalen[id] === beste); });
+    delen.push(rijenLijst(rijen));
+    var volgend = v.rondes[v.rondeIdx + 1];
+    if (volgend){
+      var vk = document.createElement("div"); vk.className = "volgende";
+      var w1 = document.createElement("div"); w1.className = "wat"; w1.textContent = "Hierna \u00b7 ronde " + (v.rondeIdx+2);
+      var n1 = document.createElement("div"); n1.className = "naam"; n1.textContent = rondeNaam(v, volgend);
+      var w2 = document.createElement("div"); w2.className = "wie";
+      w2.textContent = (volgend.start === v.jij ? "jij komt uit" : naamVan(v, volgend.start) + " komt uit")
+        + " \u00b7 " + volgend.uitleg;
+      vk.append(w1, n1, w2);
+      delen.push(vk);
+    }
+    var wacht = v.spelers.filter(function(p2){
+      return p2.online !== false && !(v.klaarLijst && v.klaarLijst[p2.id]);
+    }).map(function(p2){ return p2.id === v.jij ? "jij" : p2.naam; });
+    var wt = document.createElement("p"); wt.className = "uitleg"; wt.style.margin = "12px 0 0";
+    wt.textContent = wacht.length ? "Nog niet klaar: " + wacht.join(", ") : "Iedereen is klaar\u2026";
+    delen.push(wt);
+    return { delen:delen, ikKlaar: !!(v.klaarLijst && v.klaarLijst[v.jij]) };
+  }
+  function toonRondeVenster(v){
+    var d = rondeDelen(v);
+    toonVenster({
+      soort:"fase",
+      onder:"Ronde " + (v.rondeIdx+1) + " gedaan \u00b7 " + rondeNaam(v, v.rondes[v.rondeIdx]),
+      titel:"Tussenstand",
+      delen:d.delen,
+      knoppen:[{ tekst: d.ikKlaar ? "Wachten\u2026" : "Verder", soort:"hoofd", uit:d.ikKlaar,
+                 actie:function(){ stuurHost({ t:"verder" }); } }]
+    });
+  }
+  function vernieuwRondeVenster(v){ toonRondeVenster(v); }
+
   function toonBeeld(v){
     if (v.rondes){ rondeCache.spelId = v.spelId; rondeCache.rondes = v.rondes; }
     else if (rondeCache.rondes && rondeCache.spelId === v.spelId){ v.rondes = rondeCache.rondes; }
@@ -1791,11 +2329,12 @@
 
     var vorigeRonde = view ? view.rondeIdx : -1;
     var vorigeFase = view ? view.fase : "";
+    if (view && (v.aanZet !== view.aanZet || v.fase !== view.fase)) gekozenKaart = null;
     view = v;
     optimistisch = null;
-    if (v.fase === "gedaan"){ toonEinde(v); return; }
-    if (v.fase === "rondeklaar"){ toonTussen(v); return; }
+    if (v.fase === "gedaan"){ sluitVenster(); toonEinde(v); return; }
     show("scrGame");
+    $("btnHostmenu").hidden = !v.isHost;
 
     var r = v.rondes[v.rondeIdx];
     var titel = r.troefRonde ? ("Troef \u00b7 " + naamVan(v, r.eigenaar)) : r.naam;
@@ -1820,6 +2359,8 @@
         + ". Het spel wacht \u2014 zodra " + (weg.length === 1 ? "hij" : "ze")
         + " de pagina heropent met dezelfde naam, gaat het verder.";
     }
+
+    $("slagWaarschuw").hidden = true;
 
     tekenSpelers(v);
 
@@ -1848,20 +2389,7 @@
     }
 
     // troefkeuze
-    var kies = $("choice");
-    var magKiezen = (v.fase === "troefkeuze" && r.start === v.jij);
-    kies.hidden = !magKiezen;
-    if (magKiezen){
-      var sp = $("suitPick"); sp.innerHTML = "";
-      E.SUITS.forEach(function(s){
-        var b = document.createElement("button");
-        b.type = "button"; b.textContent = s;
-        if (E.ROOD[s]) b.className = "rood";
-        b.setAttribute("aria-label", "Troef " + s);
-        b.addEventListener("click", function(){ stuurHost({ t:"troef", suit:s }); });
-        sp.appendChild(b);
-      });
-    }
+    $("choice").hidden = true;
 
     // eigen kaarten \u2014 alleen opnieuw tekenen als er echt iets wijzigt,
     // anders springt de waaier terug bij elk bericht
@@ -1870,10 +2398,13 @@
     $("handHead").textContent = v.hand.length
       ? "Jouw kaarten \u00b7 " + v.hand.length + (v.hand.length === 1 ? " kaart" : " kaarten")
       : "Je hebt geen kaarten meer";
+    var geordend = sorteerHand(v.hand);
+    v.hand = geordend;
     var sleutel = v.hand.map(E.cardKey).join(",") + "|" + (aanZet ? v.toegelaten.join(",") : "-")
-      + "|" + (v.troef || "");
+      + "|" + (v.troef || "") + "|" + instel.kleurorde + instel.rangorde;
     if (sleutel !== handSleutel){
       handSleutel = sleutel;
+      var bewaardeStand = hand.scrollLeft;      // blijf staan waar je stond
       hand.innerHTML = "";
       v.hand.forEach(function(c){
         hand.appendChild(kaartEl(c, {
@@ -1883,30 +2414,26 @@
         }));
       });
       nieuweHand = true;
+      hand.scrollLeft = bewaardeStand;
     } else {
       nieuweHand = false;
     }
+    if (gekozenKaart && (!aanZet || v.toegelaten.indexOf(gekozenKaart) < 0)) gekozenKaart = null;
+    toonKeuze();
 
     $("schuifHint").hidden = v.hand.length < 6;
     planSchaal();
-    if (aanZet && nieuweHand){
-      var eerste = Array.prototype.filter.call(hand.children, function(el){ return !el.disabled; })[0];
-      if (eerste){
-        var h = $("hand");
-        h.scrollLeft = eerste.offsetLeft + eerste.offsetWidth/2 - h.clientWidth/2;
-        planSchaal();
-      }
-    }
 
     // waarom staan sommige kaarten uit?
     var vh = $("volgHint");
-    if (aanZet && v.slag.length && v.toegelaten.length < v.hand.length){
-      var lead = v.slag[0].card.s;
+    if (aanZet && v.reden){
       vh.hidden = false;
-      vh.innerHTML = "Je moet <b>" + lead + "</b> volgen";
+      vh.innerHTML = v.reden.replace(/([\u2660\u2665\u2666\u2663])/g, "<b>$1</b>");
     } else if (aanZet && !v.slag.length){
       vh.hidden = false; vh.textContent = "Jij komt uit \u2014 alles mag";
     } else { vh.hidden = true; }
+
+    fasevenster(v);
 
     var bordSleutel = v.rondeIdx + "|" + Object.keys(v.scores).length + "|"
       + v.ids.map(function(id){ return v.totalen[id]; }).join(",");
@@ -1922,42 +2449,6 @@
     if (r.key === "kh")     return "H\u2665";
     if (r.key === "last")   return (r.naam.indexOf("10de") >= 0 ? "10de" : "7de") + " / laatste";
     return r.naam;
-  }
-
-  function toonTussen(v){
-    show("scrTussen");
-    var r = v.rondes[v.rondeIdx];
-    var pts = v.scores[r.key] || {};
-    $("tussenKop").textContent = "Ronde " + (v.rondeIdx+1) + " van " + v.rondes.length
-      + " \u00b7 " + (r.troefRonde ? "Troef \u00b7 " + naamVan(v, r.eigenaar) : r.naam);
-    $("tussenTitel").textContent = "Tussenstand";
-    $("tussenReden").textContent = v.vroeg
-      ? "De ronde stopte vroeger: " + v.vroeg + ", de rest verandert niets meer."
-      : "";
-    var totNa = {};
-    v.ids.forEach(function(id){ totNa[id] = v.totalen[id]; });
-    var beste = Math.min.apply(null, v.ids.map(function(id){ return totNa[id]; }));
-    var ol = $("tussenLijst"); ol.innerHTML = "";
-    v.ids.slice().sort(function(a2,b2){ return totNa[a2] - totNa[b2]; }).forEach(function(id){
-      var li = document.createElement("li");
-      if (totNa[id] === beste) li.className = "beste";
-      var nm = document.createElement("span"); nm.className = "nm";
-      nm.textContent = naamVan(v, id) + (id === v.jij ? " (jij)" : "");
-      var rd = document.createElement("span");
-      rd.className = "ronde" + ((pts[id]||0) < 0 ? " min" : "");
-      rd.textContent = ((pts[id]||0) > 0 ? "+" : "") + (pts[id]||0);
-      var tt = document.createElement("span"); tt.className = "tot"; tt.textContent = totNa[id];
-      li.append(nm, rd, tt); ol.appendChild(li);
-    });
-    var wacht = v.spelers.filter(function(p){
-      return p.online !== false && !(v.klaarLijst && v.klaarLijst[p.id]);
-    }).map(function(p){ return p.id === v.jij ? "jij" : p.naam; });
-    var ikKlaar = v.klaarLijst && v.klaarLijst[v.jij];
-    $("btnVerder").disabled = !!ikKlaar;
-    $("btnVerder").textContent = ikKlaar ? "Wachten\u2026" : "Verder";
-    $("tussenWacht").textContent = wacht.length
-      ? "Nog niet klaar: " + wacht.join(", ")
-      : "Iedereen is klaar, de volgende ronde begint\u2026";
   }
 
   function tekenBord(v){
@@ -1986,6 +2477,20 @@
       });
       body.appendChild(tr);
     });
+    var corr = v.scores["correctie"];
+    if (corr && v.ids.some(function(id){ return corr[id]; })){
+      var tr2 = document.createElement("tr");
+      var c0 = document.createElement("td"); c0.className = "lbl"; c0.textContent = "Correctie";
+      tr2.appendChild(c0);
+      v.ids.forEach(function(id){
+        var td = document.createElement("td");
+        td.textContent = String(corr[id] || 0);
+        if ((corr[id] || 0) < 0) td.className = "neg";
+        tr2.appendChild(td);
+      });
+      body.appendChild(tr2);
+    }
+
     var foot = $("bFoot"); foot.innerHTML = "";
     var f0 = document.createElement("td"); f0.className = "lbl"; f0.textContent = "Totaal";
     foot.appendChild(f0);
@@ -2053,6 +2558,201 @@
       else ctx.clearRect(0,0,W,H);
     }
     requestAnimationFrame(frame);
+  }
+
+
+
+  /* =======================================================================
+     INSTELLINGEN \u2014 kleur, kaartvolgorde en tempo, bewaard op dit toestel
+     ======================================================================= */
+  var INSTEL = "kingen:instel";
+  var instel = { thema:"salie", kleurorde:"spade", rangorde:"hoog", kaart:"normaal", pauze:2000 };
+  function leesInstel(){
+    try {
+      var o = JSON.parse(localStorage.getItem(INSTEL) || "null");
+      if (o) for (var k in o) if (instel[k] !== undefined) instel[k] = o[k];
+    } catch(e){}
+    pasInstelToe();
+  }
+  function bewaarInstel(){
+    try { localStorage.setItem(INSTEL, JSON.stringify(instel)); } catch(e){}
+    pasInstelToe();
+  }
+  function pasInstelToe(){
+    var h = document.documentElement;
+    if (instel.thema === "salie") h.removeAttribute("data-thema");
+    else h.setAttribute("data-thema", instel.thema);
+    h.setAttribute("data-kaart", instel.kaart);
+    TEMPO.slag = instel.pauze;
+    handSleutel = "";                       // hand opnieuw ordenen
+    if (view) toonBeeld(view);
+  }
+  // De volgorde waarin je je kaarten in de hand ziet.
+  function sorteerHand(kaarten){
+    var orde = (instel.kleurorde === "spade")
+      ? ["\u2660","\u2665","\u2666","\u2663"]
+      : ["\u2663","\u2666","\u2665","\u2660"];
+    var op = (instel.rangorde === "hoog") ? -1 : 1;
+    return kaarten.slice().sort(function(a, b){
+      var d = orde.indexOf(a.s) - orde.indexOf(b.s);
+      if (d) return d;
+      return op * (a.r - b.r);
+    });
+  }
+
+  function toonInstellingen(){
+    var delen = [];
+    function kopje(t){ var p2 = document.createElement("p"); p2.className = "kopje"; p2.textContent = t; return p2; }
+    function keuze(opties, huidig, kiesFn){
+      var rij = document.createElement("div"); rij.className = "keuzerij";
+      opties.forEach(function(o){
+        var b2 = document.createElement("button");
+        b2.type = "button"; b2.textContent = o.tekst;
+        b2.setAttribute("aria-pressed", String(o.waarde === huidig));
+        b2.addEventListener("click", function(){ kiesFn(o.waarde); bewaarInstel(); toonInstellingen(); });
+        rij.appendChild(b2);
+      });
+      return rij;
+    }
+    delen.push(kopje("Kleur van het scherm"));
+    var bollen = document.createElement("div"); bollen.className = "kleurbol";
+    [["salie","#4F7263"],["nacht","#2E3B45"],["zee","#3C6478"],["wijn","#6B3A44"]].forEach(function(t){
+      var b2 = document.createElement("button");
+      b2.type = "button"; b2.style.background = t[1];
+      b2.setAttribute("aria-label", t[0]);
+      b2.setAttribute("aria-pressed", String(instel.thema === t[0]));
+      b2.addEventListener("click", function(){ instel.thema = t[0]; bewaarInstel(); toonInstellingen(); });
+      bollen.appendChild(b2);
+    });
+    delen.push(bollen);
+
+    delen.push(kopje("Volgorde van de kleuren"));
+    delen.push(keuze([{tekst:"\u2660 \u2665 \u2666 \u2663", waarde:"spade"},
+                      {tekst:"\u2663 \u2666 \u2665 \u2660", waarde:"klaver"}],
+                     instel.kleurorde, function(w){ instel.kleurorde = w; }));
+
+    delen.push(kopje("Volgorde van de waarden"));
+    delen.push(keuze([{tekst:"Hoog \u2192 laag", waarde:"hoog"},
+                      {tekst:"Laag \u2192 hoog", waarde:"laag"}],
+                     instel.rangorde, function(w){ instel.rangorde = w; }));
+
+    delen.push(kopje("Grootte van de kaarten"));
+    delen.push(keuze([{tekst:"Normaal", waarde:"normaal"}, {tekst:"Groot", waarde:"groot"}],
+                     instel.kaart, function(w){ instel.kaart = w; }));
+
+    delen.push(kopje("Slag blijft staan"));
+    delen.push(keuze([{tekst:"1 sec", waarde:1000}, {tekst:"2 sec", waarde:2000}, {tekst:"3 sec", waarde:3000}],
+                     instel.pauze, function(w){ instel.pauze = w; }));
+    var uitleg = document.createElement("p");
+    uitleg.className = "uitleg"; uitleg.style.margin = "0";
+    uitleg.textContent = "De pauze tussen de slagen wordt bepaald door wie de kamer maakt.";
+    delen.push(uitleg);
+
+    toonVenster({
+      soort:"host", onder:"Blijft bewaard op dit toestel", titel:"Instellingen",
+      delen:delen,
+      knoppen:[{ tekst:"Klaar", soort:"hoofd", actie:sluitVenster }]
+    });
+  }
+
+  /* ---------- hostmenu: ingrijpen als er iets misgaat ---------- */
+  function toonHostmenu(){
+    var v = view; if (!v) return;
+    toonVenster({
+      soort:"host",
+      onder:"Alleen jij ziet dit",
+      titel:"Hostmenu",
+      uitleg:"Ging er iets mis aan tafel? Hier kun je het rechtzetten.",
+      knoppen:[
+        { tekst:"Laatste kaart terugnemen", uit:!v.kanTerug,
+          actie:function(){ sluitHostmenu(); stuurHost({ t:"terug" }); } },
+        { tekst:"Punten van een ronde", uit:!v.rondes.some(function(r){ return v.scores[r.key]; }),
+          actie:function(){ toonPuntenVenster(); } },
+        { tekst:"Totalen rechtzetten", actie:function(){ toonTotalenVenster(); } },
+        { tekst:"Sluiten", soort:"stil", actie:sluitHostmenu }
+      ]
+    });
+  }
+  function sluitHostmenu(){
+    sluitVenster();
+    vensterSleutel = "";                 // laat het fasevenster terugkomen
+    if (view) fasevenster(view);
+  }
+  function toonTotalenVenster(){
+    var v = view; if (!v) return;
+    var vak = document.createElement("div"), velden = {};
+    v.ids.forEach(function(id){
+      var rij = document.createElement("div"); rij.className = "puntrij";
+      var n = document.createElement("span"); n.className = "naam"; n.textContent = naamVan(v, id);
+      var inp = document.createElement("input");
+      inp.type = "text"; inp.inputMode = "numeric"; inp.value = String(v.totalen[id]);
+      inp.setAttribute("aria-label", "Totaal " + naamVan(v, id));
+      velden[id] = inp;
+      rij.append(n, inp); vak.appendChild(rij);
+    });
+    toonVenster({
+      soort:"host",
+      onder:"Alleen jij ziet dit",
+      titel:"Totalen rechtzetten",
+      uitleg:"Zet hier de stand die op papier klopt. Het verschil komt als losse correctieregel op het bord.",
+      delen:[vak],
+      knoppen:[
+        { tekst:"Opslaan", soort:"hoofd", actie:function(){
+            var nieuwe = {};
+            v.ids.forEach(function(id){ nieuwe[id] = velden[id].value; });
+            sluitHostmenu();
+            stuurHost({ t:"totalen", waarden:nieuwe });
+          } },
+        { tekst:"Terug", soort:"stil", actie:toonHostmenu }
+      ]
+    });
+  }
+
+  function toonPuntenVenster(){
+    var v = view; if (!v) return;
+    var gespeeld = v.rondes.filter(function(r){ return v.scores[r.key]; });
+    if (!gespeeld.length) return;
+    var keuze = document.createElement("select");
+    gespeeld.forEach(function(r, i){
+      var o = document.createElement("option");
+      o.value = r.key; o.textContent = "Ronde " + (v.rondes.indexOf(r)+1) + " \u00b7 " + rondeNaam(v, r);
+      keuze.appendChild(o);
+    });
+    keuze.value = gespeeld[gespeeld.length-1].key;
+    var vak = document.createElement("div");
+    var velden = {};
+    function vul(){
+      vak.innerHTML = "";
+      var pts = v.scores[keuze.value] || {};
+      velden = {};
+      v.ids.forEach(function(id){
+        var rij = document.createElement("div"); rij.className = "puntrij";
+        var n = document.createElement("span"); n.className = "naam"; n.textContent = naamVan(v, id);
+        var inp = document.createElement("input");
+        inp.type = "text"; inp.inputMode = "numeric"; inp.value = String(pts[id] || 0);
+        inp.setAttribute("aria-label", "Punten " + naamVan(v, id));
+        velden[id] = inp;
+        rij.append(n, inp); vak.appendChild(rij);
+      });
+    }
+    keuze.addEventListener("change", vul);
+    vul();
+    toonVenster({
+      soort:"host",
+      onder:"Alleen jij ziet dit",
+      titel:"Punten aanpassen",
+      uitleg:"Kies de ronde en zet de punten recht. Iedereen ziet de nieuwe stand meteen.",
+      delen:[keuze, vak],
+      knoppen:[
+        { tekst:"Opslaan", soort:"hoofd", actie:function(){
+            var nieuwe = {};
+            v.ids.forEach(function(id){ nieuwe[id] = velden[id].value; });
+            sluitHostmenu();
+            stuurHost({ t:"punten", ronde:keuze.value, waarden:nieuwe });
+          } },
+        { tekst:"Terug", soort:"stil", actie:toonHostmenu }
+      ]
+    });
   }
 
   /* ---------- verbindingstest ---------- */
@@ -2161,9 +2861,11 @@
     var actief = G.spelers.filter(function(p){ return p.online !== false; });
     G = newGame(actief); startRonde();
   });
-  $("btnVerder").addEventListener("click", function(){
-    $("btnVerder").disabled = true; $("btnVerder").textContent = "Wachten\u2026";
-    stuurHost({ t:"verder" });
+  $("btnSolo").addEventListener("click", startSolo);
+  $("btnInstel").addEventListener("click", toonInstellingen);
+  $("btnHostmenu").addEventListener("click", toonHostmenu);
+  $("venster").addEventListener("click", function(e){
+    if (e.target === $("venster") && vensterNu === "host") sluitHostmenu();
   });
   $("btnLeave").addEventListener("click", function(){ wisSessie(); location.reload(); });
   $("btnNieuw").addEventListener("click", function(){
@@ -2173,6 +2875,7 @@
   /* ---------- opstarten: was er nog een spel bezig? ----------
      Alleen hervatten als er echt gespeeld werd en de sessie vers is.
      Zodra je zelf iets aanraakt, laat het herstel meteen los. */
+  leesInstel();
   var ses = leesSessie();
   if (ses && ses.code && ses.naam){
     var vers = ses.ts && (Date.now() - ses.ts < 3*60*60*1000);
@@ -2220,6 +2923,7 @@
   window.addEventListener("beforeunload", function(){ try{ if (peer) peer.destroy(); }catch(e){} });
 
   window.__kingen = {
+    tempo: TEMPO,
     stuur: stuurHost,
     beeld: function(){ return view; },
     ik: function(){ return me; },
